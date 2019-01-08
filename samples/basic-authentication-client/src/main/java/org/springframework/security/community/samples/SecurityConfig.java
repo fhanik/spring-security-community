@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 			.httpBasic()
 		;
-	// @formatter:on
+		// @formatter:on
 	}
 
 	@Bean

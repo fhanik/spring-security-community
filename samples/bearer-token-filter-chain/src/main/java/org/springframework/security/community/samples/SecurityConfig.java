@@ -14,20 +14,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
-	http
-		//application security
-		.authorizeRequests()
-			.mvcMatchers("/non-secure/**").permitAll()
-			.anyRequest()
-				.hasAnyAuthority("ROLE_USER","SCOPE_USER")
+		http
+			//application security
+			.authorizeRequests()
+				.mvcMatchers("/non-secure/**").permitAll()
+				.anyRequest()
+					.hasAnyAuthority("ROLE_USER","SCOPE_USER")
+					.and()
+			.oauth2ResourceServer()
+				.jwt()
+					.and()
 				.and()
-		.oauth2ResourceServer()
-			.jwt()
-				.and()
-			.and()
-		.formLogin();
-	;
-	// @formatter:on
+			.formLogin()
+		;
+		// @formatter:on
 	}
 
 	@Bean
