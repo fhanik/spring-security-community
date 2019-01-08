@@ -130,4 +130,19 @@ public class TestRequiresSecureRedirect {
 		;
 	}
 
+	@Test
+	@DisplayName("what happens when request comes in over HTTPS to the HTTP port")
+	public void whatHappens3() throws Exception {
+		mvc.perform(
+			get("/secure")
+				.with(authentication(authentication))
+				.with(request -> {request.setServerPort(8080); return request;})
+				.with(request -> {request.setSecure(true); return request;})
+				.with(request -> {request.setScheme("https"); return request;})
+		)
+			.andExpect(status().isOk())
+			.andExpect(content().string(containsString("You are authenticated")))
+		;
+	}
+
 }
