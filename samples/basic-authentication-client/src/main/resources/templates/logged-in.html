@@ -18,7 +18,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-	<title>Spring Security - Simple SAML 2 Flow</title>
+	<title>Spring Security - Simple Flow for Basic Authentication</title>
 	<meta charset="utf-8" />
 </head>
 <body>
@@ -28,17 +28,16 @@
 	</div>
 	<div style="float:none">&nbsp;</div>
 	<div style="float:right">
-		<form action="#" th:action="@{/saml/sp/logout}" method="post">
-			<input type="submit" value="Logout" />
-		</form>
 		<form action="#" th:action="@{/local/logout}" method="post">
 			<input type="submit" value="Local Logout" />
 		</form>
 	</div>
 </div>
 <h1>Success</h1>
-<div>
-	<span style="font-weight:bold">You are authenticated!</span>
+<div >
+	<span sec:authorize="isAuthenticated()" style="font-weight:bold">You are authenticated!</span><br/>
+	<span sec:authorize="permitAll()" style="font-weight:bold">Everybody sees this!</span><br/>
+	<span th:if="${authorization}" style="font-weight:bold" th:text="'Authorization Header Value:' + ${authorization}"></span><br/>
 </div>
 </body>
 </html>

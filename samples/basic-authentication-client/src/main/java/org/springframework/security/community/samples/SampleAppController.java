@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
@@ -34,19 +35,27 @@ import org.apache.commons.logging.LogFactory;
 public class SampleAppController {
 	private static final Log logger = LogFactory.getLog(SampleAppController.class);
 
-	@RequestMapping(value = {"/", "/index", "/logged-in"})
-	public String home() {
-		logger.info("Sample Application - You are logged in!");
-		return "logged-in";
-	}
-
 	@RequestMapping(value = {"/local/logout"})
 	public View logout(HttpServletRequest request,
 					   HttpServletResponse response,
 					   Authentication authentication) {
-		logger.info("Sample SP Application - Logging out locally!");
+		logger.info("Sample Application - Logging out locally!");
 		SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 		logoutHandler.logout(request, response, authentication);
-		return new RedirectView("/saml/sp/select", true);
+		return new RedirectView("/non-secure", true);
+	}
+
+	@RequestMapping(value = {"/non-secure"})
+	public String nonSecure(HttpServletRequest request,
+							Model model) {
+		model.addAttribute("authorization", request.getHeader("Authorization"));
+		return "logged-in";
+	}
+
+	@RequestMapping(value = {"/**"})
+	public String secure(HttpServletRequest request,
+						 Model model) {
+		logger.info("Sample Application - You are logged in!");
+		return nonSecure(request, model);
 	}
 }
