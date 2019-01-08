@@ -14,14 +14,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
-	http
-		//application security
-		.authorizeRequests()
-			.mvcMatchers("/non-secure/**").permitAll()
-			.anyRequest().hasRole("USER")
-			.and()
-		.httpBasic()
-	;
+		http
+			//application security
+			.authorizeRequests()
+				.mvcMatchers("/non-secure/**").permitAll()
+				.anyRequest().hasRole("USER")
+				.and()
+			.httpBasic()
+		;
 	// @formatter:on
 	}
 
