@@ -46,7 +46,8 @@ public class SpyOnTheFailureHandlerTests {
 		.roles("USER");
 
 	@Test
-	public void accountExpired() throws Exception {
+	@DisplayName("account expired throws AccountExpiredException")
+	void accountExpired() throws Exception {
 		doReturn(user
 			.username("expired")
 			.accountExpired(true)
@@ -68,7 +69,8 @@ public class SpyOnTheFailureHandlerTests {
 	}
 
 	@Test
-	public void accountLocked() throws Exception {
+	@DisplayName("account expired throws LockedException")
+	void accountLocked() throws Exception {
 		doReturn(user
 			.username("locked")
 			.accountLocked(true)
@@ -90,7 +92,8 @@ public class SpyOnTheFailureHandlerTests {
 	}
 
 	@Test
-	public void happyPath() throws Exception {
+	@DisplayName("form login works")
+	void happyPath() throws Exception {
 		doReturn(user.build())
 			.when(userDetailsService).loadUserByUsername(any(String.class));
 		mvc.perform(
