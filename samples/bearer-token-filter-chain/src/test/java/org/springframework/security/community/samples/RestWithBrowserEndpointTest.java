@@ -30,6 +30,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -88,6 +89,18 @@ public class RestWithBrowserEndpointTest {
 		mvc.perform(
 			get("/secure")
 				.with(authentication(authentication))
+		)
+			.andExpect(status().isOk())
+			.andExpect(content().string(containsString("You are authenticated")))
+		;
+	}
+
+	@Test
+	@DisplayName("authenticated browser with mock user")
+	@WithMockUser
+	public void htmlRequestWithMockUser() throws Exception {
+		mvc.perform(
+			get("/secure")
 		)
 			.andExpect(status().isOk())
 			.andExpect(content().string(containsString("You are authenticated")))
