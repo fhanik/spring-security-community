@@ -20,6 +20,7 @@ package org.springframework.security.community.samples;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("testing Spring Security Http/Https Redirects")
-public class TestRequiresSecureRedirect {
+class TestRequiresSecureRedirect {
 
 	@Autowired
 	private MockMvc mvc;
@@ -55,7 +56,7 @@ public class TestRequiresSecureRedirect {
 
 	@Test
 	@DisplayName("redirects if request is received on port 8080")
-	public void httpRequest() throws Exception {
+	void httpRequest() throws Exception {
 		mvc.perform(
 			get("/secure")
 			.with(request -> {request.setServerPort(8080); return request;})
@@ -69,7 +70,7 @@ public class TestRequiresSecureRedirect {
 
 	@Test
 	@DisplayName("redirects to login page if using https")
-	public void httpsRequestNoAuth() throws Exception {
+	void httpsRequestNoAuth() throws Exception {
 		mvc.perform(
 			get("/secure")
 				.with(request -> {request.setServerPort(8081); return request;})
@@ -83,7 +84,7 @@ public class TestRequiresSecureRedirect {
 
 	@Test
 	@DisplayName("works when authenticated over https")
-	public void httpsAuthenticated() throws Exception {
+	void httpsAuthenticated() throws Exception {
 		mvc.perform(
 			get("/secure")
 				.with(authentication(authentication))
@@ -98,23 +99,33 @@ public class TestRequiresSecureRedirect {
 
 	@Test
 	@DisplayName("what happens when request comes in over SSL but is not marked secure")
-	public void whatHappens1() throws Exception {
+	void whatHappens1() throws Exception {
 		mvc.perform(
 			get("/secure")
 				.with(authentication(authentication))
-				.with(request -> {request.setServerPort(8081); return request;})
-				.with(request -> {request.setSecure(false); return request;}) //changes nothing
-				.with(request -> {request.setScheme("https"); return request;})
+				.with(request ->
+					new MockHttpServletRequest(
+						request.getServletContext(),
+						request.getMethod(),
+						request.getRequestURI()
+					) {
+						@Override
+						public boolean isSecure() {
+							return false;
+						}
+					})
+				.with(request -> {request.setServerPort(8081); return request; })
+				.with(request -> {request.setScheme("https"); return request; })
 		)
-			//this shows that Spring Security looks at HttpServletRequest.getScheme
-			.andExpect(status().isOk())
-			.andExpect(content().string(containsString("You are authenticated")))
+			.andExpect(status().is3xxRedirection())
+			//forever looping redirect
+			.andExpect(redirectedUrl("/secure"))
 		;
 	}
 
 	@Test
 	@DisplayName("what happens when request comes in over HTTP and is secure but to the right port")
-	public void whatHappens2() throws Exception {
+	void whatHappens2() throws Exception {
 		mvc.perform(
 			get("/secure")
 				.with(authentication(authentication))
@@ -122,17 +133,17 @@ public class TestRequiresSecureRedirect {
 				.with(request -> {request.setSecure(true); return request;})
 				//notice the scheme has changed,
 				//the Web container marked the request as coming in over HTTP
+				//isSecure takes precedence
 				.with(request -> {request.setScheme("http"); return request;})
 		)
-			.andExpect(status().is3xxRedirection())
-			//looping redirect - results in
-			.andExpect(redirectedUrl("https://localhost:8081/secure"))
+			.andExpect(status().isOk())
+			.andExpect(content().string(containsString("You are authenticated")))
 		;
 	}
 
 	@Test
 	@DisplayName("what happens when request comes in over HTTPS to the HTTP port")
-	public void whatHappens3() throws Exception {
+	void whatHappens3() throws Exception {
 		mvc.perform(
 			get("/secure")
 				.with(authentication(authentication))
