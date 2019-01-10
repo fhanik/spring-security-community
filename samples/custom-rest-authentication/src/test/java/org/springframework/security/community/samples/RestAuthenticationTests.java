@@ -153,6 +153,7 @@ class RestAuthenticationTests {
 					)
 				)
 			)
+			.andExpect(content().string("DUAL AUTH"))
 		;
 	}
 
