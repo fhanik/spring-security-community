@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -36,18 +38,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.formLogin()
 				.failureHandler(failureHandler())
 				.and()
+			.httpBasic()
+				.and()
 			.csrf().disable()
-
 		;
 		// @formatter:on
 	}
 
 	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
+
+	@Bean
 	public UserDetailsService userDetailsService() {
 		return new InMemoryUserDetailsManager(
-			User.withDefaultPasswordEncoder()
+			User.builder()
+				.passwordEncoder(input -> passwordEncoder().encode(input))
 				.username("user")
-				.password("password")
+				.password("{bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG")
 				.roles("USER")
 				.build()
 		);
