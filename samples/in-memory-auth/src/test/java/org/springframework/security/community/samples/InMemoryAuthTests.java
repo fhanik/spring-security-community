@@ -20,6 +20,7 @@ package org.springframework.security.community.samples;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -42,6 +43,9 @@ class InMemoryAuthTests {
 
 	@Autowired
 	private MockMvc mvc;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@Test
 	@DisplayName("user / 123 authentication")
@@ -85,6 +89,12 @@ class InMemoryAuthTests {
 			.andExpect(unauthenticated())
 			.andExpect(redirectedUrl("/login?error"))
 		;
+	}
+
+	@Test
+	void printPasswords() {
+		System.out.println("123 = "+passwordEncoder.encode("123"));
+		System.out.println("password = "+passwordEncoder.encode("password"));
 	}
 
 }

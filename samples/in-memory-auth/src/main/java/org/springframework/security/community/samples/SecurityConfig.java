@@ -23,15 +23,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public UserDetailsService userDetailsService() {
 		return new InMemoryUserDetailsManager(
 			builder()
-				.passwordEncoder(input -> passwordEncoder().encode(input))
 				.username("user")
-				.password("123")
+				.password("{bcrypt}$2a$10$C8c78G3SRJpy268vInPUFu.3lcNHG9SaNAPdSaIOy.1TJIio0cmTK")
 				.roles("USER")
 				.build(),
 			builder()
-				.passwordEncoder(input -> passwordEncoder().encode(input))
 				.username("admin")
-				.password("password")
+				.password("{bcrypt}$2a$10$XvWhl0acx2D2hvpOPd/rPuPA48nQGxOFom1NqhxNN9ST1p9lla3bG")
 				.roles("USER", "ADMIN")
 				.build()
 		);
