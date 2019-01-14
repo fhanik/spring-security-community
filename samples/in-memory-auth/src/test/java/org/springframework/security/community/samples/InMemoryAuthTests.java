@@ -1,19 +1,19 @@
 /*
- * Copyright 2002-2019 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
+* Copyright 2002-2019 the original author or authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
+*
+*/
 
 package org.springframework.security.community.samples;
 
@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,8 +54,8 @@ class InMemoryAuthTests {
 	void user() throws Exception {
 		mvc.perform(
 			post("/login")
-				.param("username", "admin")
-				.param("password", "password")
+				.param("username", "user")
+				.param("password", "123")
 				.with(csrf())
 		)
 			.andExpect(authenticated())
@@ -95,6 +97,30 @@ class InMemoryAuthTests {
 	void printPasswords() {
 		System.out.println("123 = "+passwordEncoder.encode("123"));
 		System.out.println("password = "+passwordEncoder.encode("password"));
+	}
+
+	@Test
+	@DisplayName("user / 123 basic authentication")
+	void userBasic() throws Exception {
+		mvc.perform(
+			get("/secure")
+				.header("Authorization", "Basic " + Base64.encodeBase64String("user:123".getBytes()))
+		)
+			.andExpect(authenticated())
+			.andExpect(status().isOk())
+		;
+	}
+
+	@Test
+	@DisplayName("admin / password basic authentication")
+	void adminBasic() throws Exception {
+		mvc.perform(
+			get("/secure")
+				.header("Authorization", "Basic " + Base64.encodeBase64String("admin:password".getBytes()))
+		)
+			.andExpect(authenticated())
+			.andExpect(status().isOk())
+		;
 	}
 
 }

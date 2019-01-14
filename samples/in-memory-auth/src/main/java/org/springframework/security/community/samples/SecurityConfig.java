@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			builder()
 				.username("admin")
 				.password("{bcrypt}$2a$10$XvWhl0acx2D2hvpOPd/rPuPA48nQGxOFom1NqhxNN9ST1p9lla3bG")
-				.roles("USER", "ADMIN")
+				.roles("ADMIN")
 				.build()
 		);
 	}
@@ -43,9 +43,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			//application security
 			.authorizeRequests()
 				.mvcMatchers("/non-secure/**").permitAll()
-				.anyRequest().fullyAuthenticated()
+				.anyRequest().hasAnyRole("ADMIN","USER")
+				.and()
+			.httpBasic()
 				.and()
 			.formLogin()
+				.and()
 		;
 		// @formatter:on
 	}
