@@ -36,7 +36,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static java.util.Arrays.asList;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,7 +64,7 @@ class RestAuthenticationTests {
 	@DisplayName("invocation works if API key is correct")
 	void apiKeySuccess() throws Exception {
 		mvc.perform(
-			get("/api-key-only")
+			post("/api-key-only")
 				.header("Authorization", "ApiKey this-is-a-valid-key")
 		)
 			.andExpect(status().isOk())
@@ -83,7 +83,7 @@ class RestAuthenticationTests {
 	@DisplayName("invocation works if API key is correct even with user credentials")
 	void moreThanSufficientAuthentication() throws Exception {
 		mvc.perform(
-			get("/api-key-only")
+			post("/api-key-only")
 				.header("Authorization", "ApiKey this-is-a-valid-key")
 				.header("X-User-Credentials", "valid-user")
 		)
@@ -105,7 +105,7 @@ class RestAuthenticationTests {
 	@DisplayName("invocation fails because of an invalid key")
 	void invalidKey() throws Exception {
 		mvc.perform(
-			get("/api-key-only")
+			post("/api-key-only")
 				.header("Authorization", "ApiKey this-is-an-invalid-key")
 		)
 			.andExpect(status().is4xxClientError())
@@ -117,7 +117,7 @@ class RestAuthenticationTests {
 	@DisplayName("valid api key can't reach an endpoint with dual requirements")
 	void insufficientAuthentication() throws Exception {
 		mvc.perform(
-			get("/dual-auth")
+			post("/dual-auth")
 				.header("Authorization", "ApiKey this-is-a-valid-key")
 		)
 			.andExpect(status().is4xxClientError())
@@ -135,7 +135,7 @@ class RestAuthenticationTests {
 	@DisplayName("valid api key but invalid user auth")
 	void insufficientAuthenticationForUser() throws Exception {
 		mvc.perform(
-			get("/dual-auth")
+			post("/dual-auth")
 				.header("Authorization", "ApiKey this-is-a-valid-key")
 				.header("X-User-Credentials", "invalid-user")
 		)
@@ -154,7 +154,7 @@ class RestAuthenticationTests {
 	@DisplayName("valid api key but invalid user auth")
 	void dualAuth() throws Exception {
 		mvc.perform(
-			get("/dual-auth")
+			post("/dual-auth")
 				.header("Authorization", "ApiKey this-is-a-valid-key")
 				.header("X-User-Credentials", "valid-user")
 		)

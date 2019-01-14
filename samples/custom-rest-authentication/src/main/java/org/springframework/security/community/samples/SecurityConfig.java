@@ -24,6 +24,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 		    .addFilterBefore(new ApiKeyFilter(), HeaderWriterFilter.class)
 			.addFilterAfter(new UserCredentialsFilter(), ApiKeyFilter.class)
+			.csrf().ignoringAntMatchers(
+				"/api-key-only",
+				"/dual-auth"
+		)
 		;
 		// @formatter:on
 	}
