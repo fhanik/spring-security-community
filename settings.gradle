@@ -27,3 +27,5 @@ rootProject.children.each { p ->
 	//name the project based on the path
 	p.name = "spring-security-community-${p.name.replaceAll("/","-")}"
 }
+
+
