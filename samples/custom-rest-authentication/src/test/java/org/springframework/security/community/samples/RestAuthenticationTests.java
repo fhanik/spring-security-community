@@ -55,7 +55,7 @@ class RestAuthenticationTests {
 	public static class SpringBootApplicationTestConfig {
 		@Bean
 		BeanPostProcessor securityFilterChainPostProcessor() {
-			return new BeanPostProcessor(){}; //no op
+			return new BeanPostProcessor(){}; //no op to avoid conflict with the other tests
 		}
 	}
 
