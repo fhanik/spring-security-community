@@ -18,8 +18,13 @@
 package org.springframework.security.community.samples;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,6 +48,16 @@ class RestAuthenticationTests {
 
 	@Autowired
 	private MockMvc mvc;
+
+	@SpringBootConfiguration
+	@EnableAutoConfiguration
+	@ComponentScan(basePackages = "org/springframework/security/community/samples")
+	public static class SpringBootApplicationTestConfig {
+		@Bean
+		BeanPostProcessor securityFilterChainPostProcessor() {
+			return new BeanPostProcessor(){}; //no op
+		}
+	}
 
 
 	@Test

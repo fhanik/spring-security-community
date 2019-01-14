@@ -94,7 +94,7 @@ class CustomizeFilterChainTests {
 		}
 	}
 
-	static class FiveHundredFilter extends OncePerRequestFilter {
+	private static class FiveHundredFilter extends OncePerRequestFilter {
 		@Override
 		protected void doFilterInternal(HttpServletRequest request,
 										HttpServletResponse response,
