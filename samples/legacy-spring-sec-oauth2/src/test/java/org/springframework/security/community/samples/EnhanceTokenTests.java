@@ -73,6 +73,18 @@ class EnhanceTokenTests {
 
 	}
 
+	@Test
+	void unauthorizedResourceServerRestCall() throws Exception {
+		final String token = "invalid token";
+		mvc.perform(
+			post("/hello")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+		)
+			.andExpect(status().isUnauthorized())
+		;
+
+	}
+
 	private ResultActions getToken() throws Exception {
 		return mvc.perform(
 			post("/oauth/token")
