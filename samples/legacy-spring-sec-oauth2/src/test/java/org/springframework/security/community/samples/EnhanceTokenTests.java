@@ -17,6 +17,8 @@
 
 package org.springframework.security.community.samples;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +26,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +53,28 @@ class EnhanceTokenTests {
 	@Test
 	@DisplayName("perform a password grant")
 	void passwordGrant() throws Exception {
+		getToken()
+			.andExpect(status().isOk())
+			.andExpect(content().string(containsString("\"full_name\":\"Joe Schmoe\"")))
+			.andExpect(content().string(containsString("\"email\":\"Joe@Schmoe.Com\"")))
+		;
+	}
+
+	@Test
+	void resourceServerRestCall() throws Exception {
+		final String token = getToken(getToken().andReturn());
 		mvc.perform(
+			post("/hello")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+		)
+			.andExpect(status().isOk())
+			.andExpect(content().string(containsString("Hello to admin")))
+		;
+
+	}
+
+	private ResultActions getToken() throws Exception {
+		return mvc.perform(
 			post("/oauth/token")
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 				.header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
@@ -56,11 +83,16 @@ class EnhanceTokenTests {
 				.param("grant_type", "password")
 				.param("response_type", "token")
 				.param("client_id", "testclient")
-				.header("Authorization", "Basic "+ Base64.encodeBase64String("testclient:secret".getBytes()))
-		)
-			.andExpect(status().isOk())
-			.andExpect(content().string(containsString("\"full_name\":\"Joe Schmoe\"")))
-			.andExpect(content().string(containsString("\"email\":\"Joe@Schmoe.Com\"")))
-		;
+				.header("Authorization", "Basic " + Base64.encodeBase64String("testclient:secret".getBytes()))
+		);
+	}
+
+	private String getToken(MvcResult result) throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		String content = result.getResponse().getContentAsString();
+		final TypeReference<Map<String, Object>> type = new TypeReference<Map<String, Object>>() {
+		};
+		Map<String, Object> response = mapper.readValue(content, type);
+		return (String) response.get("access_token");
 	}
 }
