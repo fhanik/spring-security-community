@@ -4,7 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -32,7 +34,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.password("{bcrypt}$2a$10$XvWhl0acx2D2hvpOPd/rPuPA48nQGxOFom1NqhxNN9ST1p9lla3bG")
 				.roles("ADMIN")
 				.build()
-		);
+		) {
+			@Override
+			public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+				System.out.println("Custom User Details: Loading user by username:"+username);
+				return super.loadUserByUsername(username);
+			}
+		};
 	}
 
 
