@@ -55,14 +55,13 @@ public class SecurityConfig {
 			// @formatter:off
 			http
 				.mvcMatcher("/api/**")
-				//application security
 				.authorizeRequests()
-					.anyRequest().hasAnyAuthority("ADMIN","API_KEY")
+					.anyRequest().access("hasAnyAuthority('ADMIN','USER') and hasAuthority('API_KEY')")
 					.and()
 				.addFilterAfter(new ApiKeyFilter(), HeaderWriterFilter.class)
 				.sessionManagement().disable()
 			;
-		// @formatter:on
+			// @formatter:on
 		}
 	}
 
