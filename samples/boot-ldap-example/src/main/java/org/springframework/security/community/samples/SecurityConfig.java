@@ -15,9 +15,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth
 			.ldapAuthentication()
 				.contextSource()
-					.url("ldap://localhost:389")
-					.managerDn("cn=admin,dc=test,dc=com")
-					.managerPassword("password")
+					.url("ldap://localhost:33389")
+					.managerDn("cn=admin,ou=Users,dc=test,dc=com")
+					.managerPassword("adminsecret")
 					.and()
 				.userSearchBase("ou=Users,dc=test,dc=com")
 				.userSearchFilter("cn={0}")

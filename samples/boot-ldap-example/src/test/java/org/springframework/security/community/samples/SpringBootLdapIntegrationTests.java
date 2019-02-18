@@ -7,8 +7,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,13 +30,13 @@ public class SpringBootLdapIntegrationTests {
 
 	private static ApacheDsSSLContainer apacheDS;
 
-	@BeforeClass
+	@BeforeAll
 	static void startLdapServer() throws Exception {
 		apacheDS = ApacheDSHelper.start();
 	}
 
-	@AfterClass
-	static void stopLdapServer() {
+	@AfterAll
+	public static void stopLdapServer() {
 		apacheDS.stop();
 	}
 
