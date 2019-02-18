@@ -17,19 +17,14 @@
 
 package org.springframework.security.community.samples;
 
-import java.io.IOException;
-import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -62,15 +57,5 @@ public class SampleAppController {
 						 Model model) {
 		logger.info("Sample Application - You are logged in!");
 		return nonSecure(request, model);
-	}
-
-	@RequestMapping(value = {"/api/**"})
-	@ResponseBody
-	public String api(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-		throws IOException {
-		logger.info("Sample Application - Api Endpoint");
-		Assert.hasText("API_KEY", Arrays.toString(authentication.getAuthorities().toArray()));
-		response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-		return "API INVOKED";
 	}
 }

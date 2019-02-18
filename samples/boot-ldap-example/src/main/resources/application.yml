@@ -7,8 +7,8 @@ logging:
   level:
     root: INFO
     org.springframework.web: INFO
-    org.springframework.security: DEBUG
-    sample: DEBUG
+    org.springframework.security: INFO
+    sample: INFO
 
 spring:
   thymeleaf:
