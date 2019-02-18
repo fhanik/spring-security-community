@@ -14,21 +14,15 @@
  *  limitations under the License.
  *
  */
+package org.springframework.security.community.samples;
 
-include "samples/basic-authentication-client"
-include "samples/requires-secure-with-redirect"
-include "samples/bearer-token-filter-chain"
-include "samples/custom-rest-authentication"
-include "samples/in-memory-auth"
-include "samples/legacy-spring-sec-oauth2"
-include "samples/two-different-auth-mechanisms"
-include "samples/boot-ldap-example"
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-rootProject.name = "spring-security-community"
+@SpringBootApplication
+public class SampleBootApplication {
+	public static void main(String[] args) {
+		SpringApplication.run(SampleBootApplication.class, args);
+	}
 
-rootProject.children.each { p ->
-	//name the project based on the path
-	p.name = "spring-security-community-${p.name.replaceAll("/","-")}"
 }
-
-
