@@ -29,7 +29,7 @@ Add a client
 
 === Start the UAA
 
-     ./gradlew :spring-security-community-samples-oauth2-login:bootRun
+    ./gradlew run
 
 Verify your server. http://localhost:8080/uaa
 Use marissa/koala as your credentials
@@ -38,6 +38,7 @@ Use marissa/koala as your credentials
 
 Launch the Spring Boot 2.0 sample and go to `http://localhost:8081`.
 
+    ./gradlew :spring-security-community-samples-oauth2-login:bootRun
 
 
 You are then redirected to the default _auto-generated_ form login page.
