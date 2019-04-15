@@ -27,4 +27,4 @@ spring:
             token-uri: http://localhost:8080/uaa/oauth/token
             user-info-uri: http://localhost:8080/uaa/userinfo
             jwk-set-uri: http://localhost:8080/uaa/token_keys
-            user-name-attribute: sub
+            user-name-attribute: user_name

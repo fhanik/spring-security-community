@@ -29,9 +29,8 @@ apply plugin: "org.springframework.boot"
 
 dependencies {
 
-	compile("org.apache.httpcomponents:httpclient:4.5.6")
-
 	compile group: "org.springframework.security", name: "spring-security-core", version: "$springSecurityVersion"
+	compile group: "org.springframework.security", name: "spring-security-config", version: "$springSecurityVersion"
 	compile group: "org.springframework.security", name: "spring-security-oauth2-client", version: "$springSecurityVersion"
 	compile group: "org.springframework.security", name: "spring-security-web", version: "$springSecurityVersion"
 	compile group: "org.springframework.boot", name: "spring-boot-starter-web", version: "$springBootVersion"
@@ -41,5 +40,4 @@ dependencies {
 
 	testCompile group: "org.springframework.boot", name: "spring-boot-starter-test", version: "$springBootVersion"
 	testCompile group: "org.springframework.security", name: "spring-security-test", version: "$springSecurityVersion"
-	testCompile 'net.sourceforge.htmlunit:htmlunit:2.34.1'
 }
