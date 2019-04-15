@@ -1,0 +1,28 @@
+server:
+  port: 8081
+
+logging:
+  level:
+    root: INFO
+    org.springframework: DEBUG
+#    org.springframework.boot.autoconfigure: DEBUG
+
+spring:
+  thymeleaf:
+    cache: false
+  security:
+    oauth2:
+      client:
+        registration:
+          uaa:
+            client-id: spring-client
+            client-secret: spring-client-secret
+            authorization-grant-type: authorization_code
+            redirect-uri-template: http://localhost:8081/login/oauth2/code/uaa
+        provider:
+          uaa:
+            authorization-uri: http://localhost:8080/uaa/oauth/authorize
+            token-uri: http://localhost:8080/uaa/oauth/token
+            user-info-uri: http://localhost:8080/uaa/userinfo
+            jwk-set-uri: http://localhost:8080/uaa/token_keys
+            user-name-attribute: sub

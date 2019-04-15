@@ -23,6 +23,7 @@ include "samples/in-memory-auth"
 include "samples/legacy-spring-sec-oauth2"
 include "samples/two-different-auth-mechanisms"
 include "samples/boot-ldap-example"
+include "samples/oauth2-login"
 
 rootProject.name = "spring-security-community"
 

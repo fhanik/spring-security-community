@@ -1,0 +1,46 @@
+= OAuth 2.0 WebClient (Servlet) Sample
+
+== Start the Authorization Server
+
+=== Download the Cloud Foundry UAA Project (authorization server)
+
+    git clone https://github.com/cloudfoundry/uaa.git
+    cd uaa
+
+=== Add a client
+
+    vi ./uaa/src/main/webapp/WEB-INF/spring/oauth-clients.xml
+
+Find the `<beans profile="default">` section, and the `<property name="clients">` section
+Add a client
+
+    <entry key="spring-client">
+        <map>
+            <entry key="secret" value="spring-client-secret" />
+            <entry key="authorized-grant-types" value="authorization_code,refresh_token" />
+            <entry key="scope" value="openid" />
+            <entry key="autoapprove">
+                <list><value>openid</value></list>
+            </entry>
+            <entry key="redirect-uri" value="http://localhost:8081/**" />
+            <entry key="name" value="The Ultimate Spring Security Oauth App" />
+        </map>
+    </entry>
+
+=== Start the UAA
+
+    ./gradlew run
+
+Verify your server. http://localhost:8080/uaa
+Use marissa/koala as your credentials
+
+== Boot up the sample application
+
+Launch the Spring Boot 2.0 sample and go to `http://localhost:8081`.
+You are then redirected to the default _auto-generated_ form login page.
+Log in using *'user'* (marissa) and *'password'* (koala) or click the link to authenticate with `uaa`
+and then you'll be redirected to UAA for authentication.
+
+After authenticating with your GitHub credentials, the next page presented to you is "Authorize application".
+This page will ask you to *Authorize* the application you created in the previous step.
+Click _Authorize application_ to allow the OAuth application to access and display your public repository information.
