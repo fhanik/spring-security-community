@@ -36,7 +36,7 @@ Use marissa/koala as your credentials
 
 == Boot up the sample application
 
-Launch the Spring Boot 2.0 sample and go to `http://localhost:8081`.
+Launch the Spring Boot 2.0 sample and go to `http://localhost:8081/oauth2-login/`.
 
     ./gradlew :spring-security-community-samples-oauth2-login:bootRun
 
