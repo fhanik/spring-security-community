@@ -41,7 +41,7 @@ configure(allprojects) { project ->
 	ext.bcprovVersion = "1.60"
 	ext.openSamlVersion = "3.3.0"
 	ext.commonsLoggingVersion = "1.2"
-	ext.springBootVersion = "2.0.7.RELEASE"
+	ext.springBootVersion = "2.1.4.RELEASE"
 	ext.gradleScriptDir = "${rootProject.projectDir}/gradle"
 	ext.junitVersion = "5.3.2"
 	ext.jodaTimeVersion = "2.10.1"
