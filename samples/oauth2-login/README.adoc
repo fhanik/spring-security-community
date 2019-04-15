@@ -38,7 +38,7 @@ Use marissa/koala as your credentials
 
 Launch the Spring Boot 2.0 sample and go to `http://localhost:8081`.
 You are then redirected to the default _auto-generated_ form login page.
-Log in using *'user'* (marissa) and *'password'* (koala) or click the link to authenticate with `uaa`
+Log in using *'marissa'* (user) and *'koala'* (password) or click the link to authenticate with `uaa`
 and then you'll be redirected to UAA for authentication.
 
 After authenticating with your GitHub credentials, the next page presented to you is "Authorize application".
