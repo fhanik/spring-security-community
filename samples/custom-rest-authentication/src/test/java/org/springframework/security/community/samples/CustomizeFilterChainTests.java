@@ -31,7 +31,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -61,10 +61,10 @@ class CustomizeFilterChainTests {
 
 	@SpringBootConfiguration
 	@EnableAutoConfiguration
-	@ComponentScan(basePackages = "org/springframework/security/community/samples")
+	@Import({SecurityConfig.class, SampleAppController.class})
 	public static class SpringBootApplicationTestConfig {
-		@Bean
-		SecurityFilterChainPostProcessor securityFilterChainPostProcessor() {
+		@Bean("customSecurityFilterChainPostProcessor")
+		BeanPostProcessor securityFilterChainPostProcessor() {
 			return new SecurityFilterChainPostProcessor();
 		}
 	}

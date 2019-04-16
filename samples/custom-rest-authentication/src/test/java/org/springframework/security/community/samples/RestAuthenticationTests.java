@@ -18,14 +18,13 @@
 package org.springframework.security.community.samples;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -51,12 +50,8 @@ class RestAuthenticationTests {
 
 	@SpringBootConfiguration
 	@EnableAutoConfiguration
-	@ComponentScan(basePackages = "org/springframework/security/community/samples")
+	@Import({SecurityConfig.class, SampleAppController.class})
 	public static class SpringBootApplicationTestConfig {
-		@Bean
-		BeanPostProcessor securityFilterChainPostProcessor() {
-			return new BeanPostProcessor(){}; //no op to avoid conflict with the other tests
-		}
 	}
 
 
@@ -66,6 +61,7 @@ class RestAuthenticationTests {
 		mvc.perform(
 			post("/api-key-only")
 				.header("Authorization", "ApiKey this-is-a-valid-key")
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 		)
 			.andExpect(status().isOk())
 			.andExpect(authenticated()
