@@ -64,11 +64,6 @@ configure(allprojects) { project ->
 		targetCompatibility=1.8
 	}
 
-	test {
-		systemProperty("java.awt.headless", "true")
-		maxParallelForks = project.maxParallelForks as int
-	}
-
 	repositories {
 		mavenCentral()
 	}
@@ -78,44 +73,9 @@ configure(allprojects) { project ->
 		testCompile(group: "org.junit.jupiter", name: "junit-jupiter-engine", version: "$junitVersion")
 	}
 
-
-	ext.javadocLinks = [
-		"https://docs.oracle.com/javase/8/docs/api/",
-		"https://docs.oracle.com/javaee/7/api/",
-	] as String[]
 }
 configure(rootProject) {
 	description = "Spring Security Community Example Code"
-
 	// don't publish the default jar for the root project
 	configurations.archives.artifacts.clear()
-
-	task api(type: Javadoc) {
-		group = "Documentation"
-		description = "Generates aggregated Javadoc API documentation."
-		title = "${rootProject.description} ${version} API"
-
-		dependsOn {
-			coreProjects.collect {
-				it.tasks.getByName("jar")
-			}
-		}
-		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
-		options.author = true
-		options.header = rootProject.description
-		options.splitIndex = true
-		options.links(project.ext.javadocLinks)
-
-		source coreProjects.collect { project ->
-			project.sourceSets.main.allJava
-		}
-
-		maxMemory = "1024m"
-		destinationDir = new File(buildDir, "api")
-
-		doFirst {
-			classpath += files(coreProjects.collect { it.sourceSets.main.compileClasspath })
-		}
-	}
-
 }
