@@ -17,7 +17,7 @@ before_install:
 install:
 
 script:
-  - ./gradlew test
+  - ./gradlew clean test
 
 after_success:
 
