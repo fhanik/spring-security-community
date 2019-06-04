@@ -50,9 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			//application security
 			.authorizeRequests()
-				.mvcMatchers("/non-secure/**").permitAll()
 				.mvcMatchers("/test/{slug}/anything").hasAuthority("ADMIN")
-				.anyRequest().hasAnyRole("ADMIN","USER")
 				.and()
 			.httpBasic()
 				.and()
